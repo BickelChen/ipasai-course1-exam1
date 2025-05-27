@@ -792,31 +792,31 @@
         };
 
         function startQuiz() {
-            const unit = document.getElementById('unit-select').value;
-            const count = parseInt(document.getElementById('question-count').value);
-            
-            currentQuiz.unit = unit;
-            currentQuiz.questionCount = count;
-            currentQuiz.answers = {};
-            currentQuiz.startTime = new Date();
-            
-            // 隨機選擇題目
-            const allQuestions = questionBank[unit];
-            if (count > allQuestions.length) {
-				alert(`此單元目前僅有 ${allQuestions.length} 題，無法提供 ${count} 題，請重新選擇。`);
+			const unit = document.getElementById('unit-select').value;
+			const count = parseInt(document.getElementById('question-count').value);
+
+			const allQuestions = questionBank[unit];
+			
+			if (count > allQuestions.length) {
+				alert(`題庫僅有 ${allQuestions.length} 題，無法抽出 ${count} 題。\n請重新選擇題數或擴充題庫。`);
 				return;
-				}
+			}
+
+			currentQuiz.unit = unit;
+			currentQuiz.questionCount = count;
+			currentQuiz.answers = {};
+			currentQuiz.startTime = new Date();
+
 			currentQuiz.questions = shuffleArray([...allQuestions]).slice(0, count);
 
-            
-            // 隱藏設定區塊，顯示測驗區塊
-            document.getElementById('setup').style.display = 'none';
-            document.getElementById('quiz').style.display = 'block';
-            document.getElementById('results').style.display = 'none';
-            
-            renderQuestions();
-            updateProgress();
-        }
+			document.getElementById('setup').style.display = 'none';
+			document.getElementById('quiz').style.display = 'block';
+			document.getElementById('results').style.display = 'none';
+
+			renderQuestions();
+			updateProgress();
+		}
+
 
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
