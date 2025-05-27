@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人工智慧基礎概論測驗系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.1) 10px,
+                rgba(255,255,255,0.1) 20px
+            );
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-50px); }
+            100% { transform: translateX(50px); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .setup-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            min-width: 200px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .quiz-section {
+            display: none;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #2196F3;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .question-number {
+            color: #2196F3;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .option:hover {
+            border-color: #2196F3;
+            background: #f0f8ff;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.3);
+        }
+
+        .option.selected {
+            border-color: #2196F3;
+            background: #e3f2fd;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        .results-section {
+            display: none;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .score-display {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-radius: 15px;
+        }
+
+        .score-display h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .score-display p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .answer-review {
+            margin-top: 30px;
+        }
+
+        .answer-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .answer-card.correct {
+            border-left: 5px solid #4CAF50;
+        }
+
+        .answer-card.incorrect {
+            border-left: 5px solid #f44336;
+        }
+
+        .answer-explanation {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 3px solid #2196F3;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 10px;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(156, 39, 176, 0.3);
+        }
+
+        .status-correct {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .status-incorrect {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>人工智慧基礎概論</h1>
+            <p>互動式測驗系統</p>
+        </div>
+        
+        <div class="content">
+            <div id="setup" class="setup-section">
+                <div class="form-group">
+                    <label for="unit-select">選擇測驗單元：</label>
+                    <select id="unit-select">
+                        <option value="unit1">單元1：人工智慧概念</option>
+                        <option value="unit2">單元2：資料處理與分析概念</option>
+                        <option value="unit3">單元3：機器學習概念</option>
+                        <option value="unit4">單元4：鑑別式AI與生成式AI</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="question-count">選擇題目數量：</label>
+                    <select id="question-count">
+                        <option value="10">10題</option>
+                        <option value="20">20題</option>
+                        <option value="25">25題</option>
+                        <option value="50">50題</option>
+                    </select>
+                </div>
+                
+                <button class="start-btn" onclick="startQuiz()">開始測驗</button>
+            </div>
+            
+            <div id="quiz" class="quiz-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div id="questions-container"></div>
+                <button class="submit-btn" onclick="submitQuiz()">提交答案</button>
+            </div>
+            
+            <div id="results" class="results-section">
+                <div class="score-display" id="score-display"></div>
+                <div class="answer-review" id="answer-review"></div>
+                <div style="text-align: center;">
+                    <button class="restart-btn" onclick="restartQuiz()">重新測驗</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionBank = {
+            unit1: [
+                {
+                    question: "人工智慧(AI)的定義中，哪個描述最為準確？",
+                    options: [
+                        "只能執行預設程式的電腦系統",
+                        "能夠模擬人類智慧行為的電腦系統",
+                        "專門用於計算數學問題的系統",
+                        "只能處理文字資料的系統"
+                    ],
+                    correct: 1,
+                    explanation: "人工智慧是指能夠模擬人類智慧行為的電腦系統，包括學習、推理、感知等能力。"
+                },
+                {
+                    question: "根據AI的能力範圍，可以分為哪些類型？",
+                    options: [
+                        "強AI和弱AI",
+                        "快AI和慢AI",
+                        "大AI和小AI",
+                        "新AI和舊AI"
+                    ],
+                    correct: 0,
+                    explanation: "AI根據能力範圍可分為強AI（通用人工智慧）和弱AI（專用人工智慧）。目前大多數AI都屬於弱AI。"
+                },
+                {
+                    question: "AI治理的主要目標是什麼？",
+                    options: [
+                        "提高AI運算速度",
+                        "確保AI系統的安全、公平和透明",
+                        "降低AI開發成本",
+                        "增加AI系統數量"
+                    ],
+                    correct: 1,
+                    explanation: "AI治理旨在確保AI系統的安全性、公平性、透明性和可解釋性，以促進AI的負責任發展和應用。"
+                },
+                {
+                    question: "弱AI（專用AI）的特徵是什麼？",
+                    options: [
+                        "能夠處理所有類型的問題",
+                        "只能在特定領域內執行任務",
+                        "具有自我意識",
+                        "能夠獨立學習任何技能"
+                    ],
+                    correct: 1,
+                    explanation: "弱AI是專門設計來執行特定任務的AI系統，如語音識別、圖像分類等，無法跨領域通用。"
+                },
+                {
+                    question: "AI倫理考量中，哪項最為重要？",
+                    options: [
+                        "AI系統的運行效率",
+                        "AI決策的可解釋性和公平性",
+                        "AI系統的外觀設計",
+                        "AI系統的價格"
+                    ],
+                    correct: 1,
+                    explanation: "AI倫理中最重要的是確保AI決策的可解釋性和公平性，避免偏見和歧視，保護人類權益。"
+                }
+            ],
+            unit2: [
+                {
+                    question: "資料的基本類型可以分為哪些？",
+                    options: [
+                        "大資料和小資料",
+                        "結構化資料和非結構化資料",
+                        "快資料和慢資料",
+                        "新資料和舊資料"
+                    ],
+                    correct: 1,
+                    explanation: "資料主要分為結構化資料（如資料庫表格）和非結構化資料（如文字、影像、音訊）。"
+                },
+                {
+                    question: "大數據的5V特徵不包括以下哪項？",
+                    options: [
+                        "Volume（數量）",
+                        "Velocity（速度）",
+                        "Variety（多樣性）",
+                        "Visibility（可見性）"
+                    ],
+                    correct: 3,
+                    explanation: "大數據的5V特徵包括：Volume（數量）、Velocity（速度）、Variety（多樣性）、Veracity（真實性）、Value（價值）。"
+                },
+                {
+                    question: "資料清理的主要目的是？",
+                    options: [
+                        "增加資料數量",
+                        "提高資料品質",
+                        "降低儲存成本",
+                        "加快處理速度"
+                    ],
+                    correct: 1,
+                    explanation: "資料清理的目的是移除錯誤、重複和不完整的資料，提高資料品質，確保分析結果的準確性。"
+                },
+                {
+                    question: "GDPR是什麼？",
+                    options: [
+                        "一種資料儲存格式",
+                        "歐盟的一般資料保護規則",
+                        "一種資料分析軟體",
+                        "資料庫管理系統"
+                    ],
+                    correct: 1,
+                    explanation: "GDPR（General Data Protection Regulation）是歐盟的一般資料保護規則，保護個人資料隱私。"
+                },
+                {
+                    question: "資料匿名化的目的是？",
+                    options: [
+                        "提高資料處理速度",
+                        "保護個人隱私",
+                        "減少儲存空間",
+                        "美化資料格式"
+                    ],
+                    correct: 1,
+                    explanation: "資料匿名化通過移除或加密個人識別資訊，保護個人隱私同時保留資料的分析價值。"
+                }
+            ],
+            unit3: [
+                {
+                    question: "機器學習的基本概念是？",
+                    options: [
+                        "人工編寫所有程式規則",
+                        "讓電腦自動從資料中學習規律",
+                        "只處理數字資料",
+                        "僅用於影像識別"
+                    ],
+                    correct: 1,
+                    explanation: "機器學習是讓電腦系統自動從資料中學習和改進，無需明確程式設計每個具體規則。"
+                },
+                {
+                    question: "監督式學習需要什麼類型的資料？",
+                    options: [
+                        "只有輸入資料",
+                        "帶有標籤的訓練資料",
+                        "無標籤的原始資料",
+                        "只有輸出資料"
+                    ],
+                    correct: 1,
+                    explanation: "監督式學習需要帶有標籤（正確答案）的訓練資料，讓模型學習輸入和輸出之間的關係。"
+                },
+                {
+                    question: "過度擬合(Overfitting)的問題是？",
+                    options: [
+                        "模型訓練時間太長",
+                        "模型在訓練資料上表現很好，但在新資料上表現差",
+                        "模型無法學習訓練資料",
+                        "模型佔用記憶體太多"
+                    ],
+                    correct: 1,
+                    explanation: "過度擬合指模型過度學習訓練資料的細節和雜訊，導致在新資料上泛化能力差。"
+                },
+                {
+                    question: "決策樹算法的優點是？",
+                    options: [
+                        "運算速度最快",
+                        "結果易於理解和解釋",
+                        "需要最少的資料",
+                        "永遠不會過度擬合"
+                    ],
+                    correct: 1,
+                    explanation: "決策樹的主要優點是其決策過程透明，結果容易理解和解釋，適合需要可解釋性的場景。"
+                },
+                {
+                    question: "強化學習的特點是？",
+                    options: [
+                        "需要大量標註資料",
+                        "通過試錯和獎勵機制學習",
+                        "只能處理分類問題",
+                        "不需要任何資料"
+                    ],
+                    correct: 1,
+                    explanation: "強化學習通過與環境互動，根據獎勵和懲罰信號來學習最優行為策略。"
+                }
+            ],
+            unit4: [
+                {
+                    question: "鑑別式AI的主要功能是？",
+                    options: [
+                        "生成新的內容",
+                        "識別和分類現有資料",
+                        "創造藝術作品",
+                        "寫作文章"
+                    ],
+                    correct: 1,
+                    explanation: "鑑別式AI專注於識別、分類和判斷現有資料，例如圖像識別、語音辨識等。"
+                },
+                {
+                    question: "生成式AI的核心能力是？",
+                    options: [
+                        "分析資料趨勢",
+                        "創造新的內容",
+                        "分類文件類型",
+                        "檢測異常值"
+                    ],
+                    correct: 1,
+                    explanation: "生成式AI能夠創造新的內容，如生成文字、圖像、音樂等，而不僅僅是分析現有資料。"
+                },
+                {
+                    question: "GPT模型屬於哪種類型的AI？",
+                    options: [
+                        "鑑別式AI",
+                        "生成式AI",
+                        "混合式AI",
+                        "專家系統"
+                    ],
+                    correct: 1,
+                    explanation: "GPT（Generative Pre-trained Transformer）是典型的生成式AI，能夠生成人類語言文字。"
+                },
+                {
+                    question: "以下哪個是典型的鑑別式AI應用？",
+                    options: [
+                        "ChatGPT文字生成",
+                        "人臉識別系統",
+                        "AI繪圖工具",
+                        "音樂創作AI"
+                    ],
+                    correct: 1,
+                    explanation: "人臉識別系統是典型的鑑別式AI應用，用於識別和驗證人臉身份。"
+                },
+                {
+                    question: "提示工程(Prompt Engineering)主要用於？",
+                    options: [
+                        "硬體維護",
+                        "優化生成式AI的輸出品質",
+                        "資料庫設計",
+                        "網路安全"
+                    ],
+                    correct: 1,
+                    explanation: "提示工程是設計和優化輸入提示的技術，以獲得生成式AI更好的輸出結果。"
+                }
+            ]
+        };
+
+        let currentQuiz = {
+            unit: '',
+            questionCount: 0,
+            questions: [],
+            answers: {},
+            startTime: null
+        };
+
+        function startQuiz() {
+            const unit = document.getElementById('unit-select').value;
+            const count = parseInt(document.getElementById('question-count').value);
+            
+            currentQuiz.unit = unit;
+            currentQuiz.questionCount = count;
+            currentQuiz.answers = {};
+            currentQuiz.startTime = new Date();
+            
+            // 隨機選擇題目
+            const allQuestions = questionBank[unit];
+            currentQuiz.questions = shuffleArray([...allQuestions]).slice(0, Math.min(count, allQuestions.length));
+            
+            // 隱藏設定區塊，顯示測驗區塊
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('quiz').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            
+            renderQuestions();
+            updateProgress();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            currentQuiz.questions.forEach((question, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.innerHTML = `
+                    <div class="question-number">第 ${index + 1} 題</div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options">
+                        ${question.options.map((option, optionIndex) => `
+                            <label class="option" onclick="selectOption(${index}, ${optionIndex})">
+                                <input type="radio" name="question-${index}" value="${optionIndex}">
+                                <span>${option}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionCard);
+            });
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            currentQuiz.answers[questionIndex] = optionIndex;
+            
+            // 更新視覺效果
+            const options = document.querySelectorAll(`input[name="question-${questionIndex}"]`);
+            options.forEach((option, index) => {
+                const label = option.parentElement;
+                if (index === optionIndex) {
+                    label.classList.add('selected');
+                    option.checked = true;
+                } else {
+                    label.classList.remove('selected');
+                    option.checked = false;
+                }
+            });
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(currentQuiz.answers).length;
+            const total = currentQuiz.questions.length;
+            const percentage = (answered / total) * 100;
+            
+            document.getElementById('progress-fill').style.width = percentage + '%';
+        }
+
+        function submitQuiz() {
+            const answered = Object.keys(currentQuiz.answers).length;
+            const total = currentQuiz.questions.length;
+            
+            if (answered < total) {
+                if (!confirm(`您還有 ${total - answered} 題未作答，確定要提交嗎？`)) {
+                    return;
+                }
+            }
+            
+            showResults();
+        }
+
+        function showResults() {
+            const endTime = new Date();
+            const timeSpent = Math.round((endTime - currentQuiz.startTime) / 1000);
+            
+            let correctCount = 0;
+            const total = currentQuiz.questions.length;
+            
+            // 計算分數
+            currentQuiz.questions.forEach((question, index) => {
+                const userAnswer = currentQuiz.answers[index];
+                if (userAnswer === question.correct) {
+                    correctCount++;
+                }
+            });
+            
+            const score = Math.round((correctCount / total) * 100);
+            
+            // 顯示結果
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            // 顯示分數
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.innerHTML = `
+                <h2>${score}分</h2>
+                <p>答對 ${correctCount} 題，共 ${total} 題</p>
+                <p>測驗時間：${Math.floor(timeSpent / 60)}分${timeSpent % 60}秒</p>
+            `;
+            
+            // 顯示答案解析
+            showAnswerReview();
+        }
+
+        function showAnswerReview() {
+            const container = document.getElementById('answer-review');
+            container.innerHTML = '<h3 style="margin-bottom: 20px; color: #333;">答案解析</h3>';
+            
+            currentQuiz.questions.forEach((question, index) => {
+                const userAnswer = currentQuiz.answers[index];
+                const isCorrect = userAnswer === question.correct;
+                
+                const answerCard = document.createElement('div');
+                answerCard.className = `answer-card ${isCorrect ? 'correct' : 'incorrect'}`;
+                answerCard.innerHTML = `
+                    <div class="question-number">第 ${index + 1} 題 - 
+                        <span class="${isCorrect ? 'status-correct' : 'status-incorrect'}">
+                            ${isCorrect ? '✓ 正確' : '✗ 錯誤'}
+                        </span>
+                    </div>
+                    <div class="question-text">${question.question}</div>
+                    <div style="margin: 15px 0;">
+                        <strong>正確答案：</strong>${question.options[question.correct]}
+                    </div>
+                    ${userAnswer !== undefined ? `
+                        <div style="margin: 10px 0;">
+                            <strong>您的答案：</strong>${question.options[userAnswer]}
+                        </div>
+                    ` : '<div style="margin: 10px 0; color: #999;"><strong>未作答</strong></div>'}
+                    <div class="answer-explanation">
+                        <strong>解析：</strong>${question.explanation}
+                    </div>
+                `;
+                container.appendChild(answerCard);
+            });
+        }
+
+        function restartQuiz() {
+            currentQuiz = {
+                unit: '',
+                questionCount: 0,
+                questions: [],
+                answers: {},
+                startTime: null
+            };
+            
+            document.getElementById('setup').style.display = 'block';
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            
+            // 重置進度條
+            document.getElementById('progress-fill').style.width = '0%';
+        }
+    </script>
+</body>
+</html>
