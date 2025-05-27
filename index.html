@@ -802,7 +802,12 @@
             
             // 隨機選擇題目
             const allQuestions = questionBank[unit];
-            currentQuiz.questions = shuffleArray([...allQuestions]).slice(0, Math.min(count, allQuestions.length));
+            if (count > allQuestions.length) {
+				alert(`此單元目前僅有 ${allQuestions.length} 題，無法提供 ${count} 題，請重新選擇。`);
+				return;
+				}
+			currentQuiz.questions = shuffleArray([...allQuestions]).slice(0, count);
+
             
             // 隱藏設定區塊，顯示測驗區塊
             document.getElementById('setup').style.display = 'none';
