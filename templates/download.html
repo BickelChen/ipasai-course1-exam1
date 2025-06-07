@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Page Downloader</title>
+</head>
+<body>
+    <h1>Web Page Downloader</h1>
+    <form method="post">
+        <label for="url">URL:</label>
+        <input type="text" id="url" name="url" required>
+        <br>
+        <label>
+            <input type="checkbox" name="resources"> Download linked resources
+        </label>
+        <br>
+        <button type="submit">Download</button>
+    </form>
+    {% if error %}
+    <p style="color:red">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
